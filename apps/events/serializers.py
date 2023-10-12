@@ -4,29 +4,31 @@ from .models import CustomUser, Category, Event, Participation
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'email')
+        fields = '__all__'
+
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'category_name', 'category_description')
+        fields = '__all__'
+
 
 class EventSerializer(serializers.ModelSerializer):
+    # owner = serializers.StringRelatedField()
+    # category = serializers.StringRelatedField()
 
     class Meta:
         model = Event
         fields = '__all__'
 
-# class CommentsSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = Comments
-#         fields = ('id', 'author', 'event_comment', 'text', 'datetime')
+
 
 class ParticipationSerializer(serializers.ModelSerializer):
+    # participation_user = serializers.StringRelatedField(many=True)
+    # participation_event = serializers.StringRelatedField()
 
     class Meta:
         model = Participation
-        fields = ('id', 'participation_event', 'status', 'participation_user')
-
+        fields = '__all__'
 
