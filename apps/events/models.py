@@ -37,14 +37,14 @@ class Event(models.Model):
     def __str__(self):
         return self.event_name
 
-class Comments(models.Model):
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    event_comment = models.ForeignKey(Event, on_delete=models.CASCADE)
-    text = models.TextField()
-    datetime = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.text
+# class Comments(models.Model):
+#     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     event_comment = models.ForeignKey(Event, on_delete=models.CASCADE)
+#     text = models.TextField()
+#     datetime = models.DateTimeField(auto_now=True)
+#
+#     def __str__(self):
+        # return self.text
 
 
 class Participation(models.Model):

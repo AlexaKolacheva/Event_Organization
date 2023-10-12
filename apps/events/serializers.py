@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Category, Event, Comments, Participation
+from .models import CustomUser, Category, Event, Participation
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,11 +17,11 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = '__all__'
 
-class CommentsSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Comments
-        fields = ('id', 'author', 'event_comment', 'text', 'datetime')
+# class CommentsSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Comments
+#         fields = ('id', 'author', 'event_comment', 'text', 'datetime')
 
 class ParticipationSerializer(serializers.ModelSerializer):
 
