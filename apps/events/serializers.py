@@ -26,9 +26,15 @@ class EventSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        obj = super().create(validated_data)
-        process_image.delay(base64.b64encode(obj.image.read()).decode('utf-8'))
-        return obj
+        if 'image' in validated_data and validated_data['image']:
+            # Если поле 'image' присутствует в validated_data и не является пустым
+            obj = super().create(validated_data)
+            process_image.delay(base64.b64encode(obj.image.read()).decode('utf-8'))
+            return obj
+        else:
+            # Если поле 'image' отсутствует или пусто, просто создаем объект без запуска задачи
+            obj = super().create(validated_data)
+            return obj
 
 
 class ParticipationSerializer(serializers.ModelSerializer):

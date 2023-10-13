@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -164,4 +164,19 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=7),
+    'SLIDING_TOKEN_REFRESH_LIFETIME_ALLOW_REFRESH': True,
+    'SLIDING_TOKEN_REFRESH_AFTER_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME_ALLOW_REFRESH': True,
+    'SLIDING_TOKEN_REFRESH_SLIDING_TYPES': ['access'],
+    'SLIDING_TOKEN_REFRESH_SLIDING_REFRESH': False,
+    'SLIDING_TOKEN_REFRESH_SLIDING_AFK': False,
+    'SLIDING_TOKEN_REFRESH_ANONYMOUS_USER': True,
+}
+
 
