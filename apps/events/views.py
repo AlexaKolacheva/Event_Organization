@@ -1,16 +1,16 @@
 from datetime import timedelta
 
 from django_filters.rest_framework import DjangoFilterBackend
-from requests import Response
+
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from .filters import EventFilter
 from .models import CustomUser, Category, Event,  Participation
 from .serializers import CustomUserSerializer, CategorySerializer, EventSerializer,  ParticipationSerializer
-from .tasks import send_event_reminder_notification
-
+from .tasks import send_event_reminder_notification, process_image
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -33,15 +33,16 @@ class EventViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         event = serializer.save()
-        # Вызов задачи Celery для отправки уведомления
         send_event_reminder_notification.apply_async((event.id,), eta=event.date_start - timedelta(days=1))
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def perform_update(self, serializer):
         event = serializer.save()
-        # Вызов задачи Celery для отправки уведомления
         send_event_reminder_notification.apply_async((event.id,), eta=event.date_start - timedelta(days=1))
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
 
 
 class ParticipationViewSet(viewsets.ModelViewSet):

@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser, Category, Event, Participation
+from .tasks import process_image
+import base64
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,6 +24,11 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = '__all__'
 
+
+    def create(self, validated_data):
+        obj = super().create(validated_data)
+        process_image.delay(base64.b64encode(obj.image.read()).decode('utf-8'))
+        return obj
 
 
 class ParticipationSerializer(serializers.ModelSerializer):
