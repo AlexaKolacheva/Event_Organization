@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 from .filters import EventFilter
 from .models import CustomUser, Category, Event,  Participation
+from .permissions import IsEventOwnerOrReadOnly, IsEventCreatorOrReadOnly
 from .serializers import CustomUserSerializer, CategorySerializer, EventSerializer,  ParticipationSerializer
 from .tasks import send_event_reminder_notification, process_image
 
@@ -29,7 +30,7 @@ class EventViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = EventFilter
     search_fields = ['category', 'date_start' ]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEventCreatorOrReadOnly]
 
     def perform_create(self, serializer):
         event = serializer.save()
@@ -48,3 +49,4 @@ class EventViewSet(viewsets.ModelViewSet):
 class ParticipationViewSet(viewsets.ModelViewSet):
     queryset = Participation.objects.all()
     serializer_class = ParticipationSerializer
+    permission_classes = [IsEventOwnerOrReadOnly]

@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 
 from . models import Comments, Review
+from .permissions import IsReviewOwnerOrReadOnly
 from .serializers import CommentsSerializer, ReviewSerializer
 from .tasks import update_event_rating
 
@@ -14,6 +15,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [IsReviewOwnerOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
