@@ -3,8 +3,6 @@ from .models import Comments, Review
 
 
 class CommentsSerializer(serializers.ModelSerializer):
-    # author = serializers.StringRelatedField()
-    # event_comment = serializers.StringRelatedField()
     class Meta:
         model = Comments
         fields = '__all__'

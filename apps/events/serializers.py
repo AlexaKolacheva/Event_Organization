@@ -6,7 +6,17 @@ import base64
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ('id', 'username', 'email', 'password')
+
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create(
+            email =validated_data['email'],
+            )
+
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 
 
@@ -17,9 +27,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    # owner = serializers.StringRelatedField()
-    # category = serializers.StringRelatedField()
 
+    #owner= serializers.StringRelatedField()
+    #category = serializers.StringRelatedField()
     class Meta:
         model = Event
         fields = '__all__'

@@ -1,4 +1,23 @@
 from rest_framework import permissions
+from .models import CustomUser
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        # Разрешить GET и POST для всех пользователей
+        if request.method in ['GET', 'POST']:
+            return True
+        # Разрешить PUT, PATCH и DELETE только для аутентифицированных пользователей
+        return request.user and request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        # Разрешить безопасные методы для всех пользователей
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        # Разрешить PUT, PATCH и DELETE только владельцу профиля
+        return obj.id == request.user.id
+
+
 
 class IsEventOwnerOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -19,7 +38,7 @@ class IsEventOwnerOrReadOnly(permissions.BasePermission):
 
 class IsEventCreatorOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method == 'GET':
+        if request.method == 'GET' or request.method == 'POST':
             return True
         return request.user and request.user.is_authenticated
 

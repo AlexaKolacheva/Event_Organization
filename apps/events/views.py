@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from .filters import EventFilter
 from .models import CustomUser, Category, Event,  Participation
-from .permissions import IsEventOwnerOrReadOnly, IsEventCreatorOrReadOnly
+from .permissions import IsEventOwnerOrReadOnly, IsEventCreatorOrReadOnly, IsOwnerOrReadOnly
 from .serializers import CustomUserSerializer, CategorySerializer, EventSerializer,  ParticipationSerializer
 from .tasks import send_event_reminder_notification, process_image
 
@@ -17,6 +17,7 @@ from .tasks import send_event_reminder_notification, process_image
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -33,6 +34,7 @@ class EventViewSet(viewsets.ModelViewSet):
     permission_classes = [IsEventCreatorOrReadOnly]
 
     def perform_create(self, serializer):
+        serializer.validated_data['owner'] = self.request.user
         event = serializer.save()
         send_event_reminder_notification.apply_async((event.id,), eta=event.date_start - timedelta(days=1))
         return Response(serializer.data, status=status.HTTP_201_CREATED)
