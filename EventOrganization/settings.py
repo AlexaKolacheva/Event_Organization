@@ -29,7 +29,8 @@ SECRET_KEY = 'django-insecure-8qlx0&@!$h3ah$ci67g!!6tr)tl@0b@nvu%4ivy$y&y^(&u4p6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'pytest',
@@ -101,6 +103,14 @@ DATABASES = {
     }
 }
 
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ]
+
+}
 
 
 # Password validation

@@ -1,0 +1,11 @@
+version: '3'
+
+
+services:
+  web:
+    build: .
+    command: ['gunicorn', 'EventOrganization.wsgi:application', '0.0.0.0:9900']
+    volumes:
+      - .:/app
+    ports:
+      - '9900:9900'

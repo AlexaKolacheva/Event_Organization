@@ -4,6 +4,8 @@ from .models import CustomUser
 class IsOwnerOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
+        print(f'Incoming request method: {request.method}, user: {request.user}')
+
         # Разрешить GET и POST для всех пользователей
         if request.method in ['GET', 'POST']:
             return True
@@ -11,6 +13,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
+        print(f'Checking object permission for user: {request.user.id}, object: {obj.id}')
         # Разрешить безопасные методы для всех пользователей
         if request.method in permissions.SAFE_METHODS:
             return True
