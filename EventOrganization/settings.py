@@ -104,7 +104,7 @@ DATABASES = {
         'NAME': 'eventorganization_db',
         'USER': 'admin',
         'PASSWORD': '12345',
-        'HOST': 'db_postgres',  # Имя сервиса контейнера PostgreSQL в вашем docker-compose.yml
+        'HOST': 'db',  # Имя сервиса контейнера PostgreSQL в вашем docker-compose.yml
         'PORT': '5432',
     }
 }
@@ -161,7 +161,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
@@ -182,8 +182,8 @@ EMAIL_USE_TLS= os.getenv('EMAIL_USE_TLS')
 DEFAULT_FROM_EMAIL= os.getenv('DEFAULT_FROM_EMAIL')
 
 
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_ACCEPT_CONTENT = ['application/json']

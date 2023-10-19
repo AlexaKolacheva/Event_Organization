@@ -1,6 +1,21 @@
 version: '3'
 
 services:
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"  # Redis порт для внешних соединений
+
+  celery-worker:
+    build: .
+    depends_on:
+      - redis
+    command: celery -A EventOrganization worker --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
   web_django:
     build: .
     command: ./migrate.sh
@@ -11,15 +26,11 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=EventOrganization.settings
     depends_on:
-      - db_postgres
+      - db
 
-  db_postgres:
+  db:
     image: postgres:latest
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=eventorganization_db
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=12345
-volumes:
-  postgres_data:
+      POSTGRES_DB: eventorganization_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345
