@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
 
 
+
 ]
 
 
@@ -96,12 +97,24 @@ WSGI_APPLICATION = 'EventOrganization.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'eventorganization_db',
+        'USER': 'admin',
+        'PASSWORD': '12345',
+        'HOST': 'db_postgres',  # Имя сервиса контейнера PostgreSQL в вашем docker-compose.yml
+        'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 REST_FRAMEWORK = {
@@ -148,7 +161,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = [BASE_DIR / 'static']
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media/'

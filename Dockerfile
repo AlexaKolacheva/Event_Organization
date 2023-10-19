@@ -15,7 +15,6 @@ COPY requirements.txt /app/
 
 RUN pip install gunicorn
 
-CMD ["gunicorn", "--bind", "0.0.0.0:9900", "/home/alexa/python_mor/django_rest/EventOrganization:app"]
 
 RUN pip install --upgrade pip \
       && pip install -r requirements.txt
@@ -23,4 +22,3 @@ RUN pip install --upgrade pip \
 # Копируем содержимое текущей директории в контейнер
 
 COPY . /app/
-

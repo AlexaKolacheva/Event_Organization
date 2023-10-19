@@ -1,11 +1,25 @@
 version: '3'
 
-
 services:
-  web:
+  web_django:
     build: .
-    command: ['gunicorn', 'EventOrganization.wsgi:application', '0.0.0.0:9900']
+    command: ./migrate.sh
     volumes:
       - .:/app
     ports:
-      - '9900:9900'
+      - '9000:9000'
+    environment:
+      - DJANGO_SETTINGS_MODULE=EventOrganization.settings
+    depends_on:
+      - db_postgres
+
+  db_postgres:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=eventorganization_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=12345
+volumes:
+  postgres_data:
