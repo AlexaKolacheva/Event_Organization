@@ -36,11 +36,11 @@
    ```
    
 5. Соберите Docker-образ и запустите контейнеры:
+   Эта команда создаст и запустит Docker-контейнеры для приложения Django, базы данных PostgreSQL, Celery и Redis
     ```
    docker-compose up --build
     ```
-   Эта команда создаст и запустит Docker-контейнеры для приложения Django, базы данных PostgreSQL, Celery и Redis
-
+  
 7. Приложение будет доступно по адресу http://localhost:8000/. <br>
 
 
