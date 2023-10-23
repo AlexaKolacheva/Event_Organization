@@ -12,7 +12,6 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
-
     def __str__(self):
         return self.email
 
@@ -37,21 +36,21 @@ class Event(models.Model):
     def __str__(self):
         return self.event_name
 
-# class Comments(models.Model):
-#     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-#     event_comment = models.ForeignKey(Event, on_delete=models.CASCADE)
-#     text = models.TextField()
-#     datetime = models.DateTimeField(auto_now=True)
-#
-#     def __str__(self):
-        # return self.text
-
 
 class Participation(models.Model):
+    WILL_GO = 'Will go'
+    WONT_GO = "Won't go"
+    STILL_THINKING = 'Still thinking...'
+
+    STATUS_CHOICES = [
+        (WILL_GO, 'Will go'),
+        (WONT_GO, "Won't go"),
+        (STILL_THINKING, 'Still thinking...')
+    ]
+
     participation_event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    status = models.CharField(max_length=55)
+    status = models.CharField(max_length=55, choices=STATUS_CHOICES)
     participation_user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
 
     def __str__(self):
-        return f'{self.participation_user}  {self.status} in {self.participation_event}'
-
+        return f'{self.participation_user} {self.get_status_display()} in {self.participation_event}'

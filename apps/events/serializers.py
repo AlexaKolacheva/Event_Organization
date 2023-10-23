@@ -8,7 +8,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id', 'username', 'email', 'password')
 
-
     def create(self, validated_data):
         user = CustomUser.objects.create(
             email =validated_data['email'],
@@ -19,39 +18,39 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return user
 
 
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ('category_name', 'category_description')
 
 
 class EventSerializer(serializers.ModelSerializer):
-
-    #owner= serializers.StringRelatedField()
-    #category = serializers.StringRelatedField()
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = ('event_name', 'description', 'date_start',
+                  'event_place', 'category', 'image', 'owner')
+
+    def create_owner(self, validated_data):
+
+        user = self.context['request'].user
+        validated_data['owner'] = user
+        event = Event.objects.create(**validated_data)
+        return event
 
 
     def create(self, validated_data):
         if 'image' in validated_data and validated_data['image']:
-            # Если поле 'image' присутствует в validated_data и не является пустым
             obj = super().create(validated_data)
             process_image.delay(base64.b64encode(obj.image.read()).decode('utf-8'))
             return obj
         else:
-            # Если поле 'image' отсутствует или пусто, просто создаем объект без запуска задачи
             obj = super().create(validated_data)
             return obj
 
 
 class ParticipationSerializer(serializers.ModelSerializer):
-    # participation_user = serializers.StringRelatedField(many=True)
-    # participation_event = serializers.StringRelatedField()
 
     class Meta:
         model = Participation
-        fields = '__all__'
+        fields = ('participation_event', 'status', 'participation_user')
 

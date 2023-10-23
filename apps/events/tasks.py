@@ -31,9 +31,7 @@ def send_event_reminder_notification(event_id):
 @shared_task
 def process_image(file_path):
     try:
-        # Открываем изображение
         with Image.open(file_path) as img:
-            # Оптимизируем и изменяем размер изображения
             img = img.convert('RGB')
             img.thumbnail((800, 600))
             img.save(file_path, optimize=True)
