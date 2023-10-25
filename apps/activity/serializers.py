@@ -16,10 +16,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('user', 'event', 'rating', 'text')
 
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        event_id = response.data.get('event')
+    def create(self, validated_data):
+        review = Review.objects.create(**validated_data)
+        event_id = review.event.id  # Получить идентификатор события из сохраненного объекта Review
         update_event_rating.delay(event_id)
-        return response
+        return review
 
 

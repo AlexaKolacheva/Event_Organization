@@ -1,4 +1,6 @@
-from rest_framework import permissions
+from rest_framework import permissions, status
+from rest_framework.response import Response
+
 from .models import CustomUser
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -29,9 +31,12 @@ class IsEventOwnerOrReadOnly(permissions.BasePermission):
 
 class IsEventCreatorOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method == 'GET' or request.method == 'POST':
+        if request.method in ['GET', 'POST']:
             return True
-        return request.user and request.user.is_authenticated
+        if request.user and request.user.is_authenticated:
+            return True
+        return Response({'detail': 'Вы должны быть аутентифицированы для выполнения этого действия.'},
+                        status=status.HTTP_401_UNAUTHORIZED)
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
